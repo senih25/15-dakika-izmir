@@ -1,0 +1,6 @@
+service_type,service_type_label,dataset_name,dataset_url,license,attribution,refresh_note
+duty_pharmacy,Duty Pharmacy,Nöbetçi eczaneler,https://acikveri.bizizmir.com/dataset/nobetci-eczaneler-ve-eczane-listesi,CC BY 4.0,İzmir Büyükşehir Belediyesi Açık Veri Portalı,Portal günlük güncelleme bildiriyor; nöbet verisi tarih kapsamlıdır.
+pharmacy,Pharmacy,Tüm eczaneler,https://acikveri.bizizmir.com/dataset/nobetci-eczaneler-ve-eczane-listesi,CC BY 4.0,İzmir Büyükşehir Belediyesi Açık Veri Portalı,Kalıcı eczane listesi; koordinatsız kayıtlar haritada gösterilmez.
+hospital,Hospital,Hastaneler,https://acikveri.bizizmir.com/dataset/saglik-kurumlari,CC BY 4.0,İzmir Büyükşehir Belediyesi Açık Veri Portalı,Portal güncelleme sıklığını düzensiz bildiriyor; kaynak tarihi görünür tutulur.
+market,Street Market,Semt pazarları,https://acikveri.bizizmir.com/dataset/semt-pazar-yerleri,CC BY 4.0,İzmir Büyükşehir Belediyesi Açık Veri Portalı,Pazar gün/saat açıklamaları kaynak metninden gösterilir.
+assembly,Emergency Assembly Area,Afet toplanma alanları,https://acikveri.bizizmir.com/dataset/afet-ve-acil-durum-toplanma-alanlari,CC BY 4.0,İzmir Büyükşehir Belediyesi Açık Veri Portalı,Snapshot assembled from the privacy-safe compact public endpoint.
