@@ -1,13 +1,8 @@
 {
   "title": "Izmir Public Services Open Data Snapshot",
   "subtitle": "Five geospatial public-service layers with provenance, QA and CC BY 4.0",
-  "description": "A reproducible geospatial snapshot of five public-service layers from the İzmir Metropolitan Municipality Open Data Portal: duty pharmacies, pharmacies, hospitals, street markets, and emergency assembly areas.\n\nThe records are normalized into a common CSV schema and published with provenance, retrieval timestamps, coverage status, validation evidence, and a data dictionary.\n\n### Useful for\n- geospatial exploratory data analysis\n- public-health and urban-service visualization\n- source-aware proximity experiments\n- educational notebooks\n- open-data engineering and QA examples\n\n### Provenance\nPublisher: İzmir Büyükşehir Belediyesi\nPortal: https://acikveri.bizizmir.com\nLicense: CC BY 4.0\nAttribution: İzmir Büyükşehir Belediyesi Açık Veri Portalı\n\n### Responsible-use boundary\nThis snapshot does not claim walking, driving, transit, accessibility, or emergency-response travel time. Missing source data does not imply service absence. No user location or other personal user data is included.\n\nProject: https://github.com/senih25/15-dakika-izmir\nLive app: https://15-dakika-izmir.vercel.app",
+  "description": "A reproducible, analysis-ready geospatial snapshot of five public-service layers from the İzmir Metropolitan Municipality Open Data Portal: duty pharmacies, pharmacies, hospitals, street markets, and emergency assembly areas.\n\nThe official records are normalized into a common schema and published with provenance, retrieval timestamps, coverage status, machine-readable validation evidence, file descriptions, and field-level documentation.\n\nUseful for geospatial EDA, public-health and urban-service visualization, educational notebooks, open-data engineering, and source-aware proximity experiments.\n\nResponsible-use boundary: this snapshot does not establish walking, driving, transit, accessibility, or emergency-response travel time. Missing source data does not imply service absence. No user location or other personal user data is included.\n\nProject: https://github.com/senih25/15-dakika-izmir\nLive application: https://15-dakika-izmir.vercel.app",
   "id": "senihbayankulu/izmir-public-services-open-data",
-  "licenses": [
-    {
-      "name": "CC-BY-4.0"
-    }
-  ],
   "keywords": [
     "geospatial analysis",
     "health",
@@ -15,38 +10,815 @@
     "cities and urban areas",
     "data visualization"
   ],
+  "expectedUpdateFrequency": "monthly",
+  "userSpecifiedSources": "İzmir Büyükşehir Belediyesi Açık Veri Portalı — https://acikveri.bizizmir.com\n\nOfficial source datasets: duty pharmacies and pharmacies, health institutions, street markets, and emergency assembly areas. Full source URLs and retrieval notes are provided in sources.csv.",
   "resources": [
     {
       "path": "izmir_public_services_combined.csv",
-      "description": "Normalized combined table covering all five public-service layers."
+      "description": "Primary analysis-ready table containing all five normalized public-service layers.",
+      "schema": {
+        "fields": [
+          {
+            "name": "record_id",
+            "description": "Stable normalized record identifier for this published snapshot.",
+            "type": "id",
+            "title": "Stable normalized record identifier for this published snapshot."
+          },
+          {
+            "name": "service_type",
+            "description": "Machine-readable public-service category.",
+            "type": "string",
+            "title": "Machine-readable public-service category."
+          },
+          {
+            "name": "service_type_label",
+            "description": "Human-readable public-service category.",
+            "type": "string",
+            "title": "Human-readable public-service category."
+          },
+          {
+            "name": "name",
+            "description": "Facility or service name from the official source.",
+            "type": "string",
+            "title": "Facility or service name from the official source."
+          },
+          {
+            "name": "latitude",
+            "description": "Latitude coordinate used for mapping.",
+            "type": "latitude",
+            "title": "Latitude coordinate used for mapping."
+          },
+          {
+            "name": "longitude",
+            "description": "Longitude coordinate used for mapping.",
+            "type": "longitude",
+            "title": "Longitude coordinate used for mapping."
+          },
+          {
+            "name": "district",
+            "description": "District supplied by the source when available.",
+            "type": "city",
+            "title": "District supplied by the source when available."
+          },
+          {
+            "name": "neighborhood",
+            "description": "Neighborhood supplied by the source when available.",
+            "type": "string",
+            "title": "Neighborhood supplied by the source when available."
+          },
+          {
+            "name": "address",
+            "description": "Address text supplied by the official source when available.",
+            "type": "address",
+            "title": "Address text supplied by the official source when available."
+          },
+          {
+            "name": "phone",
+            "description": "Phone number supplied by the official source when available.",
+            "type": "string",
+            "title": "Phone number supplied by the official source when available."
+          },
+          {
+            "name": "detail",
+            "description": "Additional source-provided descriptive text.",
+            "type": "string",
+            "title": "Additional source-provided descriptive text."
+          },
+          {
+            "name": "observed_at",
+            "description": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records.",
+            "type": "datetime",
+            "title": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records."
+          },
+          {
+            "name": "retrieved_at",
+            "description": "UTC timestamp when this snapshot row was retrieved.",
+            "type": "datetime",
+            "title": "UTC timestamp when this snapshot row was retrieved."
+          },
+          {
+            "name": "coverage_status",
+            "description": "Coverage contract describing whether source rows were mappable.",
+            "type": "string",
+            "title": "Coverage contract describing whether source rows were mappable."
+          },
+          {
+            "name": "source_transport",
+            "description": "Retrieval path used for the normalized snapshot.",
+            "type": "string",
+            "title": "Retrieval path used for the normalized snapshot."
+          },
+          {
+            "name": "source_dataset",
+            "description": "Official dataset label.",
+            "type": "string",
+            "title": "Official dataset label."
+          },
+          {
+            "name": "source_dataset_url",
+            "description": "Official İzmir Open Data dataset page.",
+            "type": "url",
+            "title": "Official İzmir Open Data dataset page."
+          },
+          {
+            "name": "source_license",
+            "description": "License declared for the source records.",
+            "type": "string",
+            "title": "License declared for the source records."
+          },
+          {
+            "name": "source_attribution",
+            "description": "Publisher attribution required for reuse.",
+            "type": "string",
+            "title": "Publisher attribution required for reuse."
+          }
+        ]
+      }
     },
     {
       "path": "duty_pharmacy.csv",
-      "description": "Time-sensitive duty-pharmacy records."
+      "description": "Time-sensitive duty-pharmacy records normalized from the official İzBB source.",
+      "schema": {
+        "fields": [
+          {
+            "name": "record_id",
+            "description": "Stable normalized record identifier for this published snapshot.",
+            "type": "id",
+            "title": "Stable normalized record identifier for this published snapshot."
+          },
+          {
+            "name": "service_type",
+            "description": "Machine-readable public-service category.",
+            "type": "string",
+            "title": "Machine-readable public-service category."
+          },
+          {
+            "name": "service_type_label",
+            "description": "Human-readable public-service category.",
+            "type": "string",
+            "title": "Human-readable public-service category."
+          },
+          {
+            "name": "name",
+            "description": "Facility or service name from the official source.",
+            "type": "string",
+            "title": "Facility or service name from the official source."
+          },
+          {
+            "name": "latitude",
+            "description": "Latitude coordinate used for mapping.",
+            "type": "latitude",
+            "title": "Latitude coordinate used for mapping."
+          },
+          {
+            "name": "longitude",
+            "description": "Longitude coordinate used for mapping.",
+            "type": "longitude",
+            "title": "Longitude coordinate used for mapping."
+          },
+          {
+            "name": "district",
+            "description": "District supplied by the source when available.",
+            "type": "city",
+            "title": "District supplied by the source when available."
+          },
+          {
+            "name": "neighborhood",
+            "description": "Neighborhood supplied by the source when available.",
+            "type": "string",
+            "title": "Neighborhood supplied by the source when available."
+          },
+          {
+            "name": "address",
+            "description": "Address text supplied by the official source when available.",
+            "type": "address",
+            "title": "Address text supplied by the official source when available."
+          },
+          {
+            "name": "phone",
+            "description": "Phone number supplied by the official source when available.",
+            "type": "string",
+            "title": "Phone number supplied by the official source when available."
+          },
+          {
+            "name": "detail",
+            "description": "Additional source-provided descriptive text.",
+            "type": "string",
+            "title": "Additional source-provided descriptive text."
+          },
+          {
+            "name": "observed_at",
+            "description": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records.",
+            "type": "datetime",
+            "title": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records."
+          },
+          {
+            "name": "retrieved_at",
+            "description": "UTC timestamp when this snapshot row was retrieved.",
+            "type": "datetime",
+            "title": "UTC timestamp when this snapshot row was retrieved."
+          },
+          {
+            "name": "coverage_status",
+            "description": "Coverage contract describing whether source rows were mappable.",
+            "type": "string",
+            "title": "Coverage contract describing whether source rows were mappable."
+          },
+          {
+            "name": "source_transport",
+            "description": "Retrieval path used for the normalized snapshot.",
+            "type": "string",
+            "title": "Retrieval path used for the normalized snapshot."
+          },
+          {
+            "name": "source_dataset",
+            "description": "Official dataset label.",
+            "type": "string",
+            "title": "Official dataset label."
+          },
+          {
+            "name": "source_dataset_url",
+            "description": "Official İzmir Open Data dataset page.",
+            "type": "url",
+            "title": "Official İzmir Open Data dataset page."
+          },
+          {
+            "name": "source_license",
+            "description": "License declared for the source records.",
+            "type": "string",
+            "title": "License declared for the source records."
+          },
+          {
+            "name": "source_attribution",
+            "description": "Publisher attribution required for reuse.",
+            "type": "string",
+            "title": "Publisher attribution required for reuse."
+          }
+        ]
+      }
     },
     {
       "path": "pharmacy.csv",
-      "description": "Pharmacy locations."
+      "description": "All-pharmacy locations normalized from the official İzBB source.",
+      "schema": {
+        "fields": [
+          {
+            "name": "record_id",
+            "description": "Stable normalized record identifier for this published snapshot.",
+            "type": "id",
+            "title": "Stable normalized record identifier for this published snapshot."
+          },
+          {
+            "name": "service_type",
+            "description": "Machine-readable public-service category.",
+            "type": "string",
+            "title": "Machine-readable public-service category."
+          },
+          {
+            "name": "service_type_label",
+            "description": "Human-readable public-service category.",
+            "type": "string",
+            "title": "Human-readable public-service category."
+          },
+          {
+            "name": "name",
+            "description": "Facility or service name from the official source.",
+            "type": "string",
+            "title": "Facility or service name from the official source."
+          },
+          {
+            "name": "latitude",
+            "description": "Latitude coordinate used for mapping.",
+            "type": "latitude",
+            "title": "Latitude coordinate used for mapping."
+          },
+          {
+            "name": "longitude",
+            "description": "Longitude coordinate used for mapping.",
+            "type": "longitude",
+            "title": "Longitude coordinate used for mapping."
+          },
+          {
+            "name": "district",
+            "description": "District supplied by the source when available.",
+            "type": "city",
+            "title": "District supplied by the source when available."
+          },
+          {
+            "name": "neighborhood",
+            "description": "Neighborhood supplied by the source when available.",
+            "type": "string",
+            "title": "Neighborhood supplied by the source when available."
+          },
+          {
+            "name": "address",
+            "description": "Address text supplied by the official source when available.",
+            "type": "address",
+            "title": "Address text supplied by the official source when available."
+          },
+          {
+            "name": "phone",
+            "description": "Phone number supplied by the official source when available.",
+            "type": "string",
+            "title": "Phone number supplied by the official source when available."
+          },
+          {
+            "name": "detail",
+            "description": "Additional source-provided descriptive text.",
+            "type": "string",
+            "title": "Additional source-provided descriptive text."
+          },
+          {
+            "name": "observed_at",
+            "description": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records.",
+            "type": "datetime",
+            "title": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records."
+          },
+          {
+            "name": "retrieved_at",
+            "description": "UTC timestamp when this snapshot row was retrieved.",
+            "type": "datetime",
+            "title": "UTC timestamp when this snapshot row was retrieved."
+          },
+          {
+            "name": "coverage_status",
+            "description": "Coverage contract describing whether source rows were mappable.",
+            "type": "string",
+            "title": "Coverage contract describing whether source rows were mappable."
+          },
+          {
+            "name": "source_transport",
+            "description": "Retrieval path used for the normalized snapshot.",
+            "type": "string",
+            "title": "Retrieval path used for the normalized snapshot."
+          },
+          {
+            "name": "source_dataset",
+            "description": "Official dataset label.",
+            "type": "string",
+            "title": "Official dataset label."
+          },
+          {
+            "name": "source_dataset_url",
+            "description": "Official İzmir Open Data dataset page.",
+            "type": "url",
+            "title": "Official İzmir Open Data dataset page."
+          },
+          {
+            "name": "source_license",
+            "description": "License declared for the source records.",
+            "type": "string",
+            "title": "License declared for the source records."
+          },
+          {
+            "name": "source_attribution",
+            "description": "Publisher attribution required for reuse.",
+            "type": "string",
+            "title": "Publisher attribution required for reuse."
+          }
+        ]
+      }
     },
     {
       "path": "hospital.csv",
-      "description": "Hospital locations."
+      "description": "Hospital locations normalized from the official İzBB source.",
+      "schema": {
+        "fields": [
+          {
+            "name": "record_id",
+            "description": "Stable normalized record identifier for this published snapshot.",
+            "type": "id",
+            "title": "Stable normalized record identifier for this published snapshot."
+          },
+          {
+            "name": "service_type",
+            "description": "Machine-readable public-service category.",
+            "type": "string",
+            "title": "Machine-readable public-service category."
+          },
+          {
+            "name": "service_type_label",
+            "description": "Human-readable public-service category.",
+            "type": "string",
+            "title": "Human-readable public-service category."
+          },
+          {
+            "name": "name",
+            "description": "Facility or service name from the official source.",
+            "type": "string",
+            "title": "Facility or service name from the official source."
+          },
+          {
+            "name": "latitude",
+            "description": "Latitude coordinate used for mapping.",
+            "type": "latitude",
+            "title": "Latitude coordinate used for mapping."
+          },
+          {
+            "name": "longitude",
+            "description": "Longitude coordinate used for mapping.",
+            "type": "longitude",
+            "title": "Longitude coordinate used for mapping."
+          },
+          {
+            "name": "district",
+            "description": "District supplied by the source when available.",
+            "type": "city",
+            "title": "District supplied by the source when available."
+          },
+          {
+            "name": "neighborhood",
+            "description": "Neighborhood supplied by the source when available.",
+            "type": "string",
+            "title": "Neighborhood supplied by the source when available."
+          },
+          {
+            "name": "address",
+            "description": "Address text supplied by the official source when available.",
+            "type": "address",
+            "title": "Address text supplied by the official source when available."
+          },
+          {
+            "name": "phone",
+            "description": "Phone number supplied by the official source when available.",
+            "type": "string",
+            "title": "Phone number supplied by the official source when available."
+          },
+          {
+            "name": "detail",
+            "description": "Additional source-provided descriptive text.",
+            "type": "string",
+            "title": "Additional source-provided descriptive text."
+          },
+          {
+            "name": "observed_at",
+            "description": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records.",
+            "type": "datetime",
+            "title": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records."
+          },
+          {
+            "name": "retrieved_at",
+            "description": "UTC timestamp when this snapshot row was retrieved.",
+            "type": "datetime",
+            "title": "UTC timestamp when this snapshot row was retrieved."
+          },
+          {
+            "name": "coverage_status",
+            "description": "Coverage contract describing whether source rows were mappable.",
+            "type": "string",
+            "title": "Coverage contract describing whether source rows were mappable."
+          },
+          {
+            "name": "source_transport",
+            "description": "Retrieval path used for the normalized snapshot.",
+            "type": "string",
+            "title": "Retrieval path used for the normalized snapshot."
+          },
+          {
+            "name": "source_dataset",
+            "description": "Official dataset label.",
+            "type": "string",
+            "title": "Official dataset label."
+          },
+          {
+            "name": "source_dataset_url",
+            "description": "Official İzmir Open Data dataset page.",
+            "type": "url",
+            "title": "Official İzmir Open Data dataset page."
+          },
+          {
+            "name": "source_license",
+            "description": "License declared for the source records.",
+            "type": "string",
+            "title": "License declared for the source records."
+          },
+          {
+            "name": "source_attribution",
+            "description": "Publisher attribution required for reuse.",
+            "type": "string",
+            "title": "Publisher attribution required for reuse."
+          }
+        ]
+      }
     },
     {
       "path": "market.csv",
-      "description": "Street-market locations."
+      "description": "Street-market locations normalized from the official İzBB source.",
+      "schema": {
+        "fields": [
+          {
+            "name": "record_id",
+            "description": "Stable normalized record identifier for this published snapshot.",
+            "type": "id",
+            "title": "Stable normalized record identifier for this published snapshot."
+          },
+          {
+            "name": "service_type",
+            "description": "Machine-readable public-service category.",
+            "type": "string",
+            "title": "Machine-readable public-service category."
+          },
+          {
+            "name": "service_type_label",
+            "description": "Human-readable public-service category.",
+            "type": "string",
+            "title": "Human-readable public-service category."
+          },
+          {
+            "name": "name",
+            "description": "Facility or service name from the official source.",
+            "type": "string",
+            "title": "Facility or service name from the official source."
+          },
+          {
+            "name": "latitude",
+            "description": "Latitude coordinate used for mapping.",
+            "type": "latitude",
+            "title": "Latitude coordinate used for mapping."
+          },
+          {
+            "name": "longitude",
+            "description": "Longitude coordinate used for mapping.",
+            "type": "longitude",
+            "title": "Longitude coordinate used for mapping."
+          },
+          {
+            "name": "district",
+            "description": "District supplied by the source when available.",
+            "type": "city",
+            "title": "District supplied by the source when available."
+          },
+          {
+            "name": "neighborhood",
+            "description": "Neighborhood supplied by the source when available.",
+            "type": "string",
+            "title": "Neighborhood supplied by the source when available."
+          },
+          {
+            "name": "address",
+            "description": "Address text supplied by the official source when available.",
+            "type": "address",
+            "title": "Address text supplied by the official source when available."
+          },
+          {
+            "name": "phone",
+            "description": "Phone number supplied by the official source when available.",
+            "type": "string",
+            "title": "Phone number supplied by the official source when available."
+          },
+          {
+            "name": "detail",
+            "description": "Additional source-provided descriptive text.",
+            "type": "string",
+            "title": "Additional source-provided descriptive text."
+          },
+          {
+            "name": "observed_at",
+            "description": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records.",
+            "type": "datetime",
+            "title": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records."
+          },
+          {
+            "name": "retrieved_at",
+            "description": "UTC timestamp when this snapshot row was retrieved.",
+            "type": "datetime",
+            "title": "UTC timestamp when this snapshot row was retrieved."
+          },
+          {
+            "name": "coverage_status",
+            "description": "Coverage contract describing whether source rows were mappable.",
+            "type": "string",
+            "title": "Coverage contract describing whether source rows were mappable."
+          },
+          {
+            "name": "source_transport",
+            "description": "Retrieval path used for the normalized snapshot.",
+            "type": "string",
+            "title": "Retrieval path used for the normalized snapshot."
+          },
+          {
+            "name": "source_dataset",
+            "description": "Official dataset label.",
+            "type": "string",
+            "title": "Official dataset label."
+          },
+          {
+            "name": "source_dataset_url",
+            "description": "Official İzmir Open Data dataset page.",
+            "type": "url",
+            "title": "Official İzmir Open Data dataset page."
+          },
+          {
+            "name": "source_license",
+            "description": "License declared for the source records.",
+            "type": "string",
+            "title": "License declared for the source records."
+          },
+          {
+            "name": "source_attribution",
+            "description": "Publisher attribution required for reuse.",
+            "type": "string",
+            "title": "Publisher attribution required for reuse."
+          }
+        ]
+      }
     },
     {
       "path": "assembly.csv",
-      "description": "Emergency assembly area locations."
+      "description": "Emergency assembly-area locations for public-interest geospatial analysis.",
+      "schema": {
+        "fields": [
+          {
+            "name": "record_id",
+            "description": "Stable normalized record identifier for this published snapshot.",
+            "type": "id",
+            "title": "Stable normalized record identifier for this published snapshot."
+          },
+          {
+            "name": "service_type",
+            "description": "Machine-readable public-service category.",
+            "type": "string",
+            "title": "Machine-readable public-service category."
+          },
+          {
+            "name": "service_type_label",
+            "description": "Human-readable public-service category.",
+            "type": "string",
+            "title": "Human-readable public-service category."
+          },
+          {
+            "name": "name",
+            "description": "Facility or service name from the official source.",
+            "type": "string",
+            "title": "Facility or service name from the official source."
+          },
+          {
+            "name": "latitude",
+            "description": "Latitude coordinate used for mapping.",
+            "type": "latitude",
+            "title": "Latitude coordinate used for mapping."
+          },
+          {
+            "name": "longitude",
+            "description": "Longitude coordinate used for mapping.",
+            "type": "longitude",
+            "title": "Longitude coordinate used for mapping."
+          },
+          {
+            "name": "district",
+            "description": "District supplied by the source when available.",
+            "type": "city",
+            "title": "District supplied by the source when available."
+          },
+          {
+            "name": "neighborhood",
+            "description": "Neighborhood supplied by the source when available.",
+            "type": "string",
+            "title": "Neighborhood supplied by the source when available."
+          },
+          {
+            "name": "address",
+            "description": "Address text supplied by the official source when available.",
+            "type": "address",
+            "title": "Address text supplied by the official source when available."
+          },
+          {
+            "name": "phone",
+            "description": "Phone number supplied by the official source when available.",
+            "type": "string",
+            "title": "Phone number supplied by the official source when available."
+          },
+          {
+            "name": "detail",
+            "description": "Additional source-provided descriptive text.",
+            "type": "string",
+            "title": "Additional source-provided descriptive text."
+          },
+          {
+            "name": "observed_at",
+            "description": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records.",
+            "type": "datetime",
+            "title": "Explicit source observation time when supplied; important for time-sensitive duty-pharmacy records."
+          },
+          {
+            "name": "retrieved_at",
+            "description": "UTC timestamp when this snapshot row was retrieved.",
+            "type": "datetime",
+            "title": "UTC timestamp when this snapshot row was retrieved."
+          },
+          {
+            "name": "coverage_status",
+            "description": "Coverage contract describing whether source rows were mappable.",
+            "type": "string",
+            "title": "Coverage contract describing whether source rows were mappable."
+          },
+          {
+            "name": "source_transport",
+            "description": "Retrieval path used for the normalized snapshot.",
+            "type": "string",
+            "title": "Retrieval path used for the normalized snapshot."
+          },
+          {
+            "name": "source_dataset",
+            "description": "Official dataset label.",
+            "type": "string",
+            "title": "Official dataset label."
+          },
+          {
+            "name": "source_dataset_url",
+            "description": "Official İzmir Open Data dataset page.",
+            "type": "url",
+            "title": "Official İzmir Open Data dataset page."
+          },
+          {
+            "name": "source_license",
+            "description": "License declared for the source records.",
+            "type": "string",
+            "title": "License declared for the source records."
+          },
+          {
+            "name": "source_attribution",
+            "description": "Publisher attribution required for reuse.",
+            "type": "string",
+            "title": "Publisher attribution required for reuse."
+          }
+        ]
+      }
     },
     {
       "path": "sources.csv",
-      "description": "Provenance and licensing registry."
+      "description": "Provenance, source URLs, licensing, attribution and freshness registry.",
+      "schema": {
+        "fields": [
+          {
+            "name": "service_type",
+            "description": "Machine-readable public-service category.",
+            "type": "string",
+            "title": "Machine-readable public-service category."
+          },
+          {
+            "name": "service_type_label",
+            "description": "Human-readable public-service category.",
+            "type": "string",
+            "title": "Human-readable public-service category."
+          },
+          {
+            "name": "dataset_name",
+            "description": "Official dataset name.",
+            "type": "string",
+            "title": "Official dataset name."
+          },
+          {
+            "name": "dataset_url",
+            "description": "Official dataset page URL.",
+            "type": "url",
+            "title": "Official dataset page URL."
+          },
+          {
+            "name": "license",
+            "description": "Source license.",
+            "type": "string",
+            "title": "Source license."
+          },
+          {
+            "name": "attribution",
+            "description": "Required source attribution.",
+            "type": "string",
+            "title": "Required source attribution."
+          },
+          {
+            "name": "refresh_note",
+            "description": "Source-specific freshness/update interpretation note.",
+            "type": "string",
+            "title": "Source-specific freshness/update interpretation note."
+          }
+        ]
+      }
     },
     {
       "path": "validation_report.json",
-      "description": "Machine-readable QA evidence."
+      "description": "Machine-readable snapshot QA evidence: counts, coverage and validation checks."
+    },
+    {
+      "path": "DATA_DICTIONARY.md",
+      "description": "Field-level definitions and interpretation limitations."
+    },
+    {
+      "path": "KAGGLE_DATA_CARD.md",
+      "description": "Dataset motivation, provenance, quality evidence and responsible-use boundaries."
+    },
+    {
+      "path": "README.md",
+      "description": "Compact orientation and recommended starting file."
+    },
+    {
+      "path": "USABILITY_10_CHECKLIST.md",
+      "description": "Publication-quality checklist used to validate Kaggle usability metadata."
+    }
+  ],
+  "licenses": [
+    {
+      "name": "Attribution 4.0 International (CC BY 4.0)"
     }
   ]
 }
