@@ -1,5 +1,6 @@
 import dataHandler from "../api/data.js";
 import metaHandler from "../api/meta.js";
+import proximityHandler from "../api/proximity.js";
 
 function mockReq(query = {}) { return { query }; }
 function mockRes() {
@@ -24,6 +25,17 @@ for (const kind of ["duty_pharmacy", "hospital", "market", "pharmacy", "assembly
   if (!Number.isFinite(item.lat) || !Number.isFinite(item.lng)) throw new Error(`${kind} invalid coordinates`);
   console.log(`PASS ${kind}: ${res.body.items.length} records`);
 }
+
+const proximity = mockRes();
+await proximityHandler(mockReq(), proximity);
+if (proximity.code !== 200) throw new Error(`proximity HTTP ${proximity.code}`);
+if (proximity.body.locationReceived !== false) throw new Error("proximity privacy contract failed");
+for (const kind of ["duty_pharmacy", "pharmacy", "hospital", "market", "assembly"]) {
+  if (!Array.isArray(proximity.body.byKind?.[kind]) || proximity.body.byKind[kind].length === 0) {
+    throw new Error(`proximity missing ${kind}`);
+  }
+}
+console.log("PASS proximity compact endpoint + locationReceived=false");
 
 const bad = mockRes();
 await dataHandler(mockReq({ kind: "anything" }), bad);

@@ -97,45 +97,61 @@ async function fetchAssembly(source) {
   }
 }
 
+export async function loadKindData(kind) {
+  const source = sources[kind];
+  if (!source) {
+    const error = new Error("unsupported_kind");
+    error.code = "UNSUPPORTED_KIND";
+    throw error;
+  }
+
+  let raw, transport = "api";
+  if (kind === "assembly") {
+    const out = await fetchAssembly(source);
+    raw = out.rows;
+    transport = out.transport;
+  } else {
+    const json = await fetchWithTimeout(source.endpoint);
+    raw = Array.isArray(json) ? json : (json.onemliyer ?? []);
+  }
+
+  const rawCount = raw.length;
+  const items = raw.map(row =>
+    kind === "duty_pharmacy" ? normalizePharmacy(row, true) :
+    kind === "pharmacy" ? normalizePharmacy(row, false) :
+    normalizeCbs(row, kind)
+  ).filter(Boolean);
+  const droppedCount = rawCount - items.length;
+
+  return {
+    kind,
+    source: {
+      label: source.label,
+      dataset: source.dataset,
+      license: source.license,
+      attribution: source.attribution,
+      refreshNote: source.refreshNote,
+      transport
+    },
+    retrievedAt: new Date().toISOString(),
+    rawCount,
+    count: items.length,
+    droppedCount,
+    coverageStatus: droppedCount === 0 ? "COMPLETE_FOR_MAPPABLE_ROWS" : "PARTIAL_MAPPABLE_COVERAGE",
+    items
+  };
+}
+
 export default async function handler(req, res) {
   const kind = String(req.query?.kind ?? "duty_pharmacy");
-  const source = sources[kind];
-  if (!source) return res.status(400).json({ error: "unsupported_kind" });
   try {
-    let raw, transport = "api";
-    if (kind === "assembly") {
-      const out = await fetchAssembly(source);
-      raw = out.rows; transport = out.transport;
-    } else {
-      const json = await fetchWithTimeout(source.endpoint);
-      raw = Array.isArray(json) ? json : (json.onemliyer ?? []);
-    }
-    const rawCount = raw.length;
-    const items = raw.map(row =>
-      kind === "duty_pharmacy" ? normalizePharmacy(row, true) :
-      kind === "pharmacy" ? normalizePharmacy(row, false) :
-      normalizeCbs(row, kind)
-    ).filter(Boolean);
-    const droppedCount = rawCount - items.length;
+    const payload = await loadKindData(kind);
     res.setHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=3600");
-    return res.status(200).json({
-      kind,
-      source: {
-        label: source.label,
-        dataset: source.dataset,
-        license: source.license,
-        attribution: source.attribution,
-        refreshNote: source.refreshNote,
-        transport
-      },
-      retrievedAt: new Date().toISOString(),
-      rawCount,
-      count: items.length,
-      droppedCount,
-      coverageStatus: droppedCount === 0 ? "COMPLETE_FOR_MAPPABLE_ROWS" : "PARTIAL_MAPPABLE_COVERAGE",
-      items
-    });
+    return res.status(200).json(payload);
   } catch (error) {
+    if (error?.code === "UNSUPPORTED_KIND") {
+      return res.status(400).json({ error: "unsupported_kind" });
+    }
     return res.status(502).json({
       error: "upstream_unavailable",
       kind,

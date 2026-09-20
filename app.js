@@ -1,9 +1,20 @@
+import {
+  KIND_LABELS,
+  haversineKm,
+  summarizeProximity,
+  shareText,
+  formatDistance
+} from "./proximity.js";
+
 const state = {
   kind: "duty_pharmacy",
   items: [],
   userLocation: null,
   source: null,
-  retrievedAt: null
+  retrievedAt: null,
+  lifeRadius: 1000,
+  lifeData: null,
+  lifeSummary: null
 };
 
 const els = {
@@ -13,7 +24,16 @@ const els = {
   locate: document.querySelector("#locateBtn"),
   status: document.querySelector("#liveStatus"),
   list: document.querySelector("#resultsList"),
-  source: document.querySelector("#sourceSummary")
+  source: document.querySelector("#sourceSummary"),
+  lifeButton: document.querySelector("#lifeCardBtn"),
+  lifeStatus: document.querySelector("#lifeCardStatus"),
+  lifeTitle: document.querySelector("#lifeCardTitle"),
+  lifeCounts: document.querySelector("#lifeCardCounts"),
+  lifeNearest: document.querySelector("#lifeCardNearest"),
+  lifeEvidence: document.querySelector("#lifeCardEvidence"),
+  shareCard: document.querySelector("#shareCardBtn"),
+  downloadCard: document.querySelector("#downloadCardBtn"),
+  radiusButtons: [...document.querySelectorAll(".radius-btn")]
 };
 
 const map = L.map("map", { preferCanvas: true }).setView([38.4237, 27.1428], 10);
@@ -28,16 +48,6 @@ function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, ch => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   }[ch]));
-}
-
-function haversine(a, b) {
-  const R = 6371;
-  const dLat = (b.lat - a.lat) * Math.PI / 180;
-  const dLng = (b.lng - a.lng) * Math.PI / 180;
-  const x = Math.sin(dLat / 2) ** 2 +
-    Math.cos(a.lat * Math.PI / 180) * Math.cos(b.lat * Math.PI / 180) *
-    Math.sin(dLng / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(x));
 }
 
 function distanceLabel(km) {
@@ -56,7 +66,7 @@ function filteredItems() {
   return state.items
     .map(item => ({
       ...item,
-      distanceKm: state.userLocation ? haversine(state.userLocation, item) : null
+      distanceKm: state.userLocation ? haversineKm(state.userLocation, item) : null
     }))
     .filter(item => {
       if (!q) return true;
@@ -154,6 +164,224 @@ async function loadData() {
   }
 }
 
+async function getCurrentPosition() {
+  if (!navigator.geolocation) throw new Error("Tarayıcınız konum özelliğini desteklemiyor.");
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => reject(new Error("Konum izni verilmedi veya konum alınamadı.")),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+    );
+  });
+}
+
+async function loadLifeData() {
+  const response = await fetch("/api/proximity");
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Yakınlık veri paketi alınamadı");
+  }
+  if (data.locationReceived !== false) {
+    throw new Error("Gizlilik sözleşmesi doğrulanamadı");
+  }
+  return { byKind: data.byKind, meta: data.meta };
+}
+
+function radiusLabel(radiusMeters) {
+  return radiusMeters >= 1000 ? `${radiusMeters / 1000} km` : `${radiusMeters} m`;
+}
+
+function renderLifeCard(summary) {
+  state.lifeSummary = summary;
+  const radius = radiusLabel(summary.radiusMeters);
+  els.lifeTitle.textContent = `${radius} Yaşam Kartı`;
+
+  const metrics = [
+    ["duty_pharmacy", "Nöbetçi eczane"],
+    ["pharmacy", "Eczane"],
+    ["hospital", "Hastane"],
+    ["market", "Semt pazarı"],
+    ["assembly", "Afet alanı"]
+  ];
+  els.lifeCounts.innerHTML = metrics.map(([kind, label]) =>
+    `<div class="metric"><strong>${summary.counts[kind]}</strong><span>${label}</span></div>`
+  ).join("");
+
+  const critical = ["duty_pharmacy", "hospital", "assembly"];
+  els.lifeNearest.innerHTML = critical.map(kind => {
+    const item = summary.nearest[kind];
+    if (!item) {
+      return `<div class="nearest-item"><span>En yakın ${KIND_LABELS[kind]}</span><strong>Kaynakta konumlu kayıt yok</strong></div>`;
+    }
+    return `<div class="nearest-item">
+      <span>En yakın ${KIND_LABELS[kind]}</span>
+      <strong>${esc(item.name)} · ${formatDistance(item.distanceKm)}</strong>
+    </div>`;
+  }).join("");
+
+  const newest = Object.values(state.lifeData.meta)
+    .map(meta => new Date(meta.retrievedAt).getTime())
+    .filter(Number.isFinite)
+    .sort((a, b) => b - a)[0];
+  const checked = newest ? new Date(newest).toLocaleString("tr-TR") : new Date().toLocaleString("tr-TR");
+  els.lifeEvidence.textContent = `5 resmî açık veri katmanı · Son veri çekimi: ${checked} · CC BY 4.0`;
+  els.lifeStatus.textContent = `${radius} çevren için kart hazır. Koordinatın kartta ve paylaşım metninde yer almıyor.`;
+  els.shareCard.disabled = false;
+  els.downloadCard.disabled = false;
+}
+
+async function createLifeCard() {
+  els.lifeButton.disabled = true;
+  els.lifeButton.textContent = "Hazırlanıyor…";
+  els.lifeStatus.textContent = "Konum cihazdan alınıyor ve beş resmî veri katmanı karşılaştırılıyor…";
+  try {
+    const origin = await getCurrentPosition();
+    state.userLocation = origin;
+    if (!state.lifeData) state.lifeData = await loadLifeData();
+    const summary = summarizeProximity(state.lifeData.byKind, origin, state.lifeRadius);
+    renderLifeCard(summary);
+
+    if (userMarker) map.removeLayer(userMarker);
+    userMarker = L.circleMarker([origin.lat, origin.lng], {
+      radius: 9, weight: 3, color: "#004b3b", fillColor: "#ffffff", fillOpacity: 1
+    }).addTo(map).bindPopup("Yaklaşık konumunuz");
+    map.setView([origin.lat, origin.lng], 13);
+    render();
+  } catch (error) {
+    els.lifeStatus.textContent = error.message || "Yaşam kartı oluşturulamadı.";
+  } finally {
+    els.lifeButton.disabled = false;
+    els.lifeButton.textContent = "Yaşam kartımı oluştur";
+  }
+}
+
+function buildLifeCardCanvas(summary) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1200;
+  canvas.height = 630;
+  const ctx = canvas.getContext("2d");
+  const radius = radiusLabel(summary.radiusMeters);
+
+  ctx.fillStyle = "#073f32";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgba(255,255,255,.05)";
+  ctx.beginPath();
+  ctx.arc(1100, 40, 300, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "#b8f1da";
+  ctx.font = "700 28px system-ui";
+  ctx.fillText("İZMİR YAKINIMDA", 64, 72);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "800 58px system-ui";
+  ctx.fillText(`${radius} Yaşam Kartım`, 64, 142);
+
+  const metrics = [
+    ["duty_pharmacy", "Nöbetçi eczane"],
+    ["pharmacy", "Eczane"],
+    ["hospital", "Hastane"],
+    ["market", "Semt pazarı"],
+    ["assembly", "Afet alanı"]
+  ];
+
+  const startX = 64;
+  const gap = 14;
+  const boxW = 202;
+  metrics.forEach(([kind, label], index) => {
+    const x = startX + index * (boxW + gap);
+    ctx.fillStyle = "rgba(255,255,255,.10)";
+    ctx.fillRect(x, 190, boxW, 150);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 52px system-ui";
+    ctx.fillText(String(summary.counts[kind]), x + 18, 250);
+    ctx.fillStyle = "rgba(255,255,255,.78)";
+    ctx.font = "600 22px system-ui";
+    ctx.fillText(label, x + 18, 300);
+  });
+
+  ctx.fillStyle = "#b8f1da";
+  ctx.font = "700 22px system-ui";
+  ctx.fillText("EN YAKIN KRİTİK HİZMETLER", 64, 392);
+
+  const critical = [
+    ["duty_pharmacy", 64],
+    ["hospital", 430],
+    ["assembly", 796]
+  ];
+  critical.forEach(([kind, x]) => {
+    const item = summary.nearest[kind];
+    ctx.fillStyle = "rgba(0,0,0,.14)";
+    ctx.fillRect(x, 416, 340, 100);
+    ctx.fillStyle = "rgba(255,255,255,.70)";
+    ctx.font = "600 18px system-ui";
+    ctx.fillText(`En yakın ${KIND_LABELS[kind]}`, x + 16, 448);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "700 21px system-ui";
+    const label = item ? `${item.name.slice(0, 22)} · ${formatDistance(item.distanceKm)}` : "Kayıt yok";
+    ctx.fillText(label, x + 16, 484);
+  });
+
+  ctx.fillStyle = "rgba(255,255,255,.72)";
+  ctx.font = "500 18px system-ui";
+  ctx.fillText("Kaynak: İzmir Büyükşehir Belediyesi Açık Veri Portalı · CC BY 4.0", 64, 572);
+  ctx.fillText("Koordinat ve açık adres bu kartta yer almaz. #İzmirYakınımda", 64, 604);
+  return canvas;
+}
+
+function canvasBlob(canvas) {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("PNG üretilemedi")), "image/png", 0.92);
+  });
+}
+
+async function shareLifeCard() {
+  if (!state.lifeSummary) return;
+  const text = shareText(state.lifeSummary);
+  const canvas = buildLifeCardCanvas(state.lifeSummary);
+  try {
+    const blob = await canvasBlob(canvas);
+    const file = new File([blob], "izmir-yakinimda.png", { type: "image/png" });
+    if (navigator.share) {
+      const payload = { title: "İzmir Yakınımda", text, url: location.href };
+      if (navigator.canShare?.({ files: [file] })) payload.files = [file];
+      await navigator.share(payload);
+      els.lifeStatus.textContent = "Yaşam kartı paylaşım ekranına gönderildi.";
+      return;
+    }
+    await navigator.clipboard.writeText(`${text} ${location.href}`);
+    els.lifeStatus.textContent = "Paylaşım metni panoya kopyalandı.";
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      els.lifeStatus.textContent = "Paylaşım açılamadı; PNG indir seçeneğini kullanabilirsin.";
+    }
+  }
+}
+
+function downloadLifeCard() {
+  if (!state.lifeSummary) return;
+  const canvas = buildLifeCardCanvas(state.lifeSummary);
+  const link = document.createElement("a");
+  link.download = `izmir-yakinimda-${state.lifeSummary.radiusMeters}m.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+  els.lifeStatus.textContent = "Yaşam kartı PNG olarak indirildi.";
+}
+
+function updateLifeRadius(radiusMeters) {
+  state.lifeRadius = radiusMeters;
+  els.radiusButtons.forEach(button => {
+    const selected = Number(button.dataset.radius) === radiusMeters;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+  if (state.lifeData && state.userLocation) {
+    renderLifeCard(summarizeProximity(state.lifeData.byKind, state.userLocation, radiusMeters));
+  } else {
+    els.lifeTitle.textContent = `${radiusLabel(radiusMeters)} Yaşam Kartı`;
+  }
+}
+
 function useLocation() {
   if (!navigator.geolocation) {
     els.status.classList.add("error");
@@ -188,4 +416,11 @@ els.kind.addEventListener("change", loadData);
 els.search.addEventListener("input", render);
 els.limit.addEventListener("change", render);
 els.locate.addEventListener("click", useLocation);
+els.lifeButton.addEventListener("click", createLifeCard);
+els.shareCard.addEventListener("click", shareLifeCard);
+els.downloadCard.addEventListener("click", downloadLifeCard);
+els.radiusButtons.forEach(button => {
+  button.addEventListener("click", () => updateLifeRadius(Number(button.dataset.radius)));
+});
+updateLifeRadius(1000);
 loadData();

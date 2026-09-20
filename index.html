@@ -3,8 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="İzmir'de nöbetçi eczane, hastane, afet toplanma alanı ve semt pazarı gibi kamu hizmetlerine açık verilerle erişim.">
-  <title>İzmir Erişim Haritası — 15 Dakika İzmir</title>
+  <meta name="description" content="İzmir'de 500 m, 1 km veya 2 km çevrendeki eczane, hastane, semt pazarı ve afet alanlarını resmî açık verilerle keşfet; gizlilik dostu Yaşam Kartını paylaş.">
+  <meta name="theme-color" content="#073f32">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:title" content="İzmir Yakınımda — 1 km Yaşam Kartım">
+  <meta property="og:description" content="Çevrendeki kamusal hizmetleri İzBB açık verileriyle keşfet. Konumun sunucuya gönderilmez.">
+  <meta property="og:url" content="https://15-dakika-izmir.vercel.app/">
+  <meta property="og:image" content="https://15-dakika-izmir.vercel.app/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="İzmir Yakınımda — 1 km Yaşam Kartım">
+  <meta name="twitter:description" content="500 m / 1 km / 2 km çevrendeki kamusal hizmetleri açık veriyle keşfet.">
+  <meta name="twitter:image" content="https://15-dakika-izmir.vercel.app/social-card.png">
+  <title>İzmir Yakınımda — 15 Dakika İzmir</title>
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="preconnect" href="https://tile.openstreetmap.org">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -21,6 +34,7 @@
       </div>
     </div>
     <nav aria-label="Ana menü">
+      <a href="#yasam-karti">1 km Yaşam Kartım</a>
       <a href="#hizmetler">Hizmetler</a>
       <a href="#kaynaklar">Kaynaklar</a>
       <a href="#hakkinda">Hakkında</a>
@@ -46,6 +60,68 @@
         <a href="tel:112">112’yi ara</a>
         <a href="tel:153">İzmir 153</a>
       </aside>
+    </section>
+
+    <section id="yasam-karti" class="proximity-section" aria-labelledby="proximity-title">
+      <div class="proximity-intro">
+        <div>
+          <span class="eyebrow">Kişisel · gizlilik dostu · paylaşılabilir</span>
+          <h2 id="proximity-title">İzmir 1 km Yaşam Kartım</h2>
+          <p>Konumunu yalnız bu tarayıcıda kullanarak çevrendeki kamusal hizmetleri say. Sonuç koordinatını veya açık adresini içermez; paylaşılabilir kart yalnız yarıçap ve hizmet özetini gösterir.</p>
+        </div>
+        <div class="radius-control" aria-label="Yaşam kartı yarıçapı">
+          <button class="radius-btn" type="button" data-radius="500">500 m</button>
+          <button class="radius-btn active" type="button" data-radius="1000">1 km</button>
+          <button class="radius-btn" type="button" data-radius="2000">2 km</button>
+        </div>
+      </div>
+
+      <div class="proximity-grid">
+        <div class="proximity-action">
+          <span class="card-kicker">Benim çevrem</span>
+          <h3>Kaç hizmet gerçekten yakınımda?</h3>
+          <p>Beş resmî açık veri katmanı tek seferde karşılaştırılır. Her hesap tarayıcında yapılır.</p>
+          <button id="lifeCardBtn" class="primary" type="button">Yaşam kartımı oluştur</button>
+          <p id="lifeCardStatus" class="privacy-note" role="status" aria-live="polite">Konum izni yalnız düğmeye bastığında istenir.</p>
+        </div>
+
+        <div id="lifeCard" class="life-card" aria-live="polite">
+          <div class="life-card-head">
+            <div>
+              <span class="card-kicker">İzmir Yakınımda</span>
+              <h3 id="lifeCardTitle">1 km Yaşam Kartı</h3>
+            </div>
+            <span class="evidence-badge">İzBB Açık Veri</span>
+          </div>
+          <div id="lifeCardCounts" class="metric-grid">
+            <div class="metric"><strong>—</strong><span>Nöbetçi eczane</span></div>
+            <div class="metric"><strong>—</strong><span>Eczane</span></div>
+            <div class="metric"><strong>—</strong><span>Hastane</span></div>
+            <div class="metric"><strong>—</strong><span>Semt pazarı</span></div>
+            <div class="metric"><strong>—</strong><span>Afet alanı</span></div>
+          </div>
+          <div id="lifeCardNearest" class="nearest-grid">
+            <p>Konumunu paylaşmadan en yakın kritik hizmetleri burada göreceksin.</p>
+          </div>
+          <div class="life-card-foot">
+            <span id="lifeCardEvidence">Kaynak: İzBB Açık Veri Portalı · CC BY 4.0</span>
+            <span>Koordinat kartta yer almaz.</span>
+          </div>
+          <div class="share-actions">
+            <button id="shareCardBtn" class="secondary" type="button" disabled>Paylaş</button>
+            <button id="downloadCardBtn" class="secondary" type="button" disabled>PNG indir</button>
+          </div>
+        </div>
+      </div>
+      <details class="method-card">
+        <summary>Bu kart nasıl hesaplanıyor?</summary>
+        <div class="method-grid">
+          <p><strong>4 resmî veri seti / 5 katman:</strong> nöbetçi eczane + eczane listesi, hastaneler, semt pazarları ve afet toplanma alanları.</p>
+          <p><strong>Mesafe:</strong> cihazındaki konum ile açık veri koordinatları arasında Haversine kuş-uçuşu mesafe hesaplanır; 500 m / 1 km / 2 km eşiği uygulanır.</p>
+          <p><strong>İddia sınırı:</strong> sonuç seyahat süresi, yürüme rotası, mahalle puanı veya “iyi/kötü” sıralaması değildir.</p>
+          <p><strong>Gizlilik:</strong> konum API isteğine eklenmez. Sunucu yalnız İzmir geneli için kompakt açık veri noktalarını gönderir; hesap cihazda yapılır.</p>
+        </div>
+      </details>
     </section>
 
     <section id="hizmetler" class="service-section" aria-labelledby="services-title">
@@ -124,11 +200,11 @@
   </main>
 
   <footer>
-    <div><strong>15 Dakika İzmir</strong> · bağımsız açık veri kamu hizmeti prototipi</div>
-    <div>Veri: İzmir Büyükşehir Belediyesi Açık Veri Portalı · CC BY 4.0</div>
+    <div><strong>İzmir Yakınımda / 15 Dakika İzmir</strong> · bağımsız açık veri kamu hizmeti</div>
+    <div>İzBB'nin resmî uygulaması değildir · Veri: İzmir Büyükşehir Belediyesi Açık Veri Portalı · CC BY 4.0</div>
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script type="module" src="/app.js?v=0.1.1"></script>
+  <script type="module" src="/app.js?v=0.2.0"></script>
 </body>
 </html>

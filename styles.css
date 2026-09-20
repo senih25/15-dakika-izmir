@@ -215,3 +215,240 @@ footer {
   html { scroll-behavior: auto; }
   * { transition: none !important; animation: none !important; }
 }
+.proximity-section {
+  padding: 18px clamp(18px, 4vw, 64px) 64px;
+}
+.proximity-intro {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+.proximity-intro p {
+  max-width: 760px;
+  color: var(--muted);
+  margin-bottom: 0;
+}
+.radius-control {
+  display: inline-flex;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 999px;
+}
+.radius-btn {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 0 15px;
+  border-radius: 999px;
+  font-weight: 750;
+  cursor: pointer;
+}
+.radius-btn.active {
+  background: var(--ink);
+  color: #fff;
+}
+.proximity-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, .62fr) minmax(0, 1.38fr);
+  gap: 16px;
+}
+.proximity-action,
+.life-card {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+.proximity-action {
+  background: var(--surface);
+  padding: clamp(22px, 4vw, 36px);
+}
+.proximity-action h3,
+.life-card h3 {
+  margin: 6px 0 10px;
+  font-size: clamp(1.45rem, 2.6vw, 2.15rem);
+  line-height: 1.08;
+}
+.proximity-action p { color: var(--muted); }
+.card-kicker {
+  color: var(--accent);
+  font-size: .76rem;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.life-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(22px, 4vw, 36px);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(255,255,255,.22), transparent 24%),
+    linear-gradient(135deg, #073f32, #006b54);
+  color: #fff;
+}
+.life-card::after {
+  content: "İZMİR";
+  position: absolute;
+  right: -12px;
+  bottom: -30px;
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 900;
+  letter-spacing: -.08em;
+  opacity: .045;
+  pointer-events: none;
+}
+.life-card-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+.life-card .card-kicker { color: #b8f1da; }
+.evidence-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 24px 0;
+  position: relative;
+  z-index: 1;
+}
+.metric {
+  min-height: 112px;
+  padding: 14px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 16px;
+}
+.metric strong {
+  display: block;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.metric span {
+  display: block;
+  color: rgba(255,255,255,.78);
+  font-size: .78rem;
+  line-height: 1.25;
+}
+.nearest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+.nearest-item {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.14);
+}
+.nearest-item span,
+.nearest-item strong {
+  display: block;
+}
+.nearest-item span {
+  color: rgba(255,255,255,.7);
+  font-size: .72rem;
+}
+.nearest-item strong {
+  margin-top: 5px;
+  font-size: .92rem;
+}
+.life-card-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.17);
+  color: rgba(255,255,255,.68);
+  font-size: .72rem;
+  position: relative;
+  z-index: 1;
+}
+.share-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  position: relative;
+  z-index: 1;
+}
+.life-card .secondary {
+  border-color: rgba(255,255,255,.28);
+  background: rgba(255,255,255,.1);
+  color: #fff;
+}
+.life-card .secondary:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+.life-card .secondary:not(:disabled):hover {
+  background: rgba(255,255,255,.18);
+}
+
+@media (max-width: 900px) {
+  .proximity-intro { align-items: stretch; flex-direction: column; }
+  .radius-control { align-self: flex-start; }
+  .proximity-grid { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  .metric:last-child { grid-column: span 2; }
+  .nearest-grid { grid-template-columns: 1fr; }
+  .life-card-foot { flex-direction: column; }
+}
+@media (max-width: 520px) {
+  .radius-control { width: 100%; }
+  .radius-btn { flex: 1; padding: 0 8px; }
+  .life-card-head { flex-direction: column; }
+  .metric-grid { grid-template-columns: 1fr 1fr; }
+  .share-actions { flex-direction: column; }
+}
+
+.method-card {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  overflow: hidden;
+}
+.method-card summary {
+  cursor: pointer;
+  padding: 15px 18px;
+  font-weight: 800;
+}
+.method-card[open] summary {
+  border-bottom: 1px solid var(--line);
+}
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+}
+.method-grid p {
+  margin: 0;
+  padding: 16px 18px;
+  color: var(--muted);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.method-grid strong { color: var(--ink); }
+@media (max-width: 700px) {
+  .method-grid { grid-template-columns: 1fr; }
+  .method-grid p { border-right: 0; }
+}
