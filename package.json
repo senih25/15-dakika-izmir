@@ -1,0 +1,16 @@
+{
+  "name": "15-dakika-izmir",
+  "version": "0.1.0",
+  "private": false,
+  "description": "İzmir halkı için açık veriye dayalı kamu hizmeti erişim arayüzü",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vercel dev",
+    "check": "node --check app.js && node --check api/data.js && node --check api/meta.js",
+    "test": "node test/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

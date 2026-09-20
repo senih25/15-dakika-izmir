@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="İzmir'de nöbetçi eczane, hastane, afet toplanma alanı ve semt pazarı gibi kamu hizmetlerine açık verilerle erişim.">
+  <title>İzmir Erişim Haritası — 15 Dakika İzmir</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://tile.openstreetmap.org">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">İçeriğe geç</a>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">İZ</span>
+      <div>
+        <strong>İzmir Erişim Haritası</strong>
+        <span>15 Dakika İzmir · PUBLIC-BETA</span>
+      </div>
+    </div>
+    <nav aria-label="Ana menü">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#kaynaklar">Kaynaklar</a>
+      <a href="#hakkinda">Hakkında</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow">Açık veriyle kamu hizmetine erişim</div>
+        <h1 id="hero-title">İzmir’de ihtiyacın olan hizmeti daha kolay bul.</h1>
+        <p>Nöbetçi eczane, hastane, afet toplanma alanı, semt pazarı ve eczaneleri tek ekranda incele. Veriler doğrudan İzmir Büyükşehir Belediyesi Açık Veri Portalı kaynaklarından alınır.</p>
+        <div class="hero-actions">
+          <button id="locateBtn" class="primary" type="button">Konumuma göre sırala</button>
+          <a class="secondary" href="#hizmetler">Hizmetleri göster</a>
+        </div>
+        <p class="privacy-note">Konum koordinatın bu uygulamanın sunucusuna gönderilmez veya kaydedilmez. Mesafe hesabı tarayıcında yapılır.</p>
+      </div>
+      <aside class="emergency-card" aria-label="Acil iletişim">
+        <span>Acil durum</span>
+        <strong>112</strong>
+        <p>Hayati acil durumlarda bu site yerine 112 Acil Çağrı Merkezi’ni kullan.</p>
+        <a href="tel:112">112’yi ara</a>
+        <a href="tel:153">İzmir 153</a>
+      </aside>
+    </section>
+
+    <section id="hizmetler" class="service-section" aria-labelledby="services-title">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Hizmet bulucu</span>
+          <h2 id="services-title">Yakındaki kamu hizmetleri</h2>
+        </div>
+        <div id="liveStatus" class="live-status" role="status" aria-live="polite">Veri hazırlanıyor…</div>
+      </div>
+
+      <div class="controls" aria-label="Hizmet filtreleri">
+        <label>
+          <span>Hizmet türü</span>
+          <select id="kindSelect">
+            <option value="duty_pharmacy">Nöbetçi eczaneler</option>
+            <option value="hospital">Hastaneler</option>
+            <option value="assembly">Afet toplanma alanları</option>
+            <option value="market">Semt pazarları</option>
+            <option value="pharmacy">Tüm eczaneler</option>
+          </select>
+        </label>
+        <label class="search-field">
+          <span>Ara</span>
+          <input id="searchInput" type="search" placeholder="İsim, ilçe veya mahalle" autocomplete="off">
+        </label>
+        <label>
+          <span>Gösterim</span>
+          <select id="limitSelect">
+            <option value="50">İlk 50</option>
+            <option value="100" selected>İlk 100</option>
+            <option value="250">İlk 250</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="workspace">
+        <div class="map-wrap">
+          <div id="map" role="application" aria-label="İzmir hizmet haritası"></div>
+          <div class="map-caption">Harita altlığı © OpenStreetMap katkıcıları. Hizmet verileri İzBB Açık Veri Portalı kaynaklıdır.</div>
+        </div>
+        <div class="results-panel">
+          <div id="sourceSummary" class="source-summary"></div>
+          <ol id="resultsList" class="results-list" aria-label="Hizmet sonuçları"></ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="kaynaklar" class="info-grid" aria-labelledby="sources-title">
+      <article>
+        <span class="eyebrow">Kaynak</span>
+        <h2 id="sources-title">Doğrudan ve izinli veri</h2>
+        <p>Bu uygulama yalnız tanımlı İzBB Açık Veri kaynaklarını çağırır. Serbest URL proxy’si yoktur. Kaynak lisansı aksi belirtilmedikçe CC BY 4.0’dır.</p>
+        <a href="https://acikveri.bizizmir.com/tr/license" target="_blank" rel="noopener">İzBB Açık Veri Lisansı</a>
+      </article>
+      <article>
+        <span class="eyebrow">Şeffaflık</span>
+        <h2>Veri yok ≠ hizmet yok</h2>
+        <p>Bir kaynak erişilemiyorsa veya güncellik kapısından geçmiyorsa bunu “hizmet yok” şeklinde yorumlamıyoruz. Hata ve eksikler açıkça gösterilir.</p>
+      </article>
+      <article>
+        <span class="eyebrow">Mahremiyet</span>
+        <h2>Hesap ve takip yok</h2>
+        <p>Kullanıcı hesabı, reklam, davranış analitiği veya konum geçmişi tutulmaz. Harita sağlayıcısı görüntülenen harita alanına ilişkin standart ağ istekleri alabilir.</p>
+      </article>
+    </section>
+
+    <section id="hakkinda" class="about">
+      <div>
+        <span class="eyebrow">Kamu yararı standardı</span>
+        <h2>Skor vermeden önce kanıt göster.</h2>
+      </div>
+      <p>Bu beta sürüm mahalleleri “iyi/kötü” diye sıralamaz. Amaç, doğrulanmış kamu hizmeti noktalarını anlaşılır biçimde erişilebilir kılmak; kaynak, güncellik ve sınırlamaları kullanıcıdan saklamamaktır.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div><strong>15 Dakika İzmir</strong> · bağımsız açık veri kamu hizmeti prototipi</div>
+    <div>Veri: İzmir Büyükşehir Belediyesi Açık Veri Portalı · CC BY 4.0</div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
