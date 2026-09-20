@@ -1,0 +1,52 @@
+{
+  "title": "Izmir Public Services Open Data Snapshot",
+  "subtitle": "Five geospatial public-service layers with provenance, QA and CC BY 4.0",
+  "description": "A reproducible geospatial snapshot of five public-service layers from the İzmir Metropolitan Municipality Open Data Portal: duty pharmacies, pharmacies, hospitals, street markets, and emergency assembly areas.\n\nThe records are normalized into a common CSV schema and published with provenance, retrieval timestamps, coverage status, validation evidence, and a data dictionary.\n\n### Useful for\n- geospatial exploratory data analysis\n- public-health and urban-service visualization\n- source-aware proximity experiments\n- educational notebooks\n- open-data engineering and QA examples\n\n### Provenance\nPublisher: İzmir Büyükşehir Belediyesi\nPortal: https://acikveri.bizizmir.com\nLicense: CC BY 4.0\nAttribution: İzmir Büyükşehir Belediyesi Açık Veri Portalı\n\n### Responsible-use boundary\nThis snapshot does not claim walking, driving, transit, accessibility, or emergency-response travel time. Missing source data does not imply service absence. No user location or other personal user data is included.\n\nProject: https://github.com/senih25/15-dakika-izmir\nLive app: https://15-dakika-izmir.vercel.app",
+  "id": "senihbayankulu/izmir-public-services-open-data",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0"
+    }
+  ],
+  "keywords": [
+    "geospatial analysis",
+    "health",
+    "public health",
+    "cities and urban areas",
+    "data visualization"
+  ],
+  "resources": [
+    {
+      "path": "izmir_public_services_combined.csv",
+      "description": "Normalized combined table covering all five public-service layers."
+    },
+    {
+      "path": "duty_pharmacy.csv",
+      "description": "Time-sensitive duty-pharmacy records."
+    },
+    {
+      "path": "pharmacy.csv",
+      "description": "Pharmacy locations."
+    },
+    {
+      "path": "hospital.csv",
+      "description": "Hospital locations."
+    },
+    {
+      "path": "market.csv",
+      "description": "Street-market locations."
+    },
+    {
+      "path": "assembly.csv",
+      "description": "Emergency assembly area locations."
+    },
+    {
+      "path": "sources.csv",
+      "description": "Provenance and licensing registry."
+    },
+    {
+      "path": "validation_report.json",
+      "description": "Machine-readable QA evidence."
+    }
+  ]
+}
