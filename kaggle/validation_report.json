@@ -1,0 +1,65 @@
+{
+  "generated_at": "2026-09-20T07:31:27.575Z",
+  "service_counts": {
+    "duty_pharmacy": {
+      "raw_count": 74,
+      "mappable_count": 74,
+      "dropped_count": 0,
+      "coverage_status": "COMPLETE_FOR_MAPPABLE_ROWS",
+      "transport": "api",
+      "retrieved_at": "2026-09-20T07:31:15.753Z"
+    },
+    "pharmacy": {
+      "raw_count": 2031,
+      "mappable_count": 2031,
+      "dropped_count": 0,
+      "coverage_status": "COMPLETE_FOR_MAPPABLE_ROWS",
+      "transport": "api",
+      "retrieved_at": "2026-09-20T07:31:15.702Z"
+    },
+    "hospital": {
+      "raw_count": 84,
+      "mappable_count": 84,
+      "dropped_count": 0,
+      "coverage_status": "COMPLETE_FOR_MAPPABLE_ROWS",
+      "transport": "api",
+      "retrieved_at": "2026-09-20T07:31:15.089Z"
+    },
+    "market": {
+      "raw_count": 269,
+      "mappable_count": 269,
+      "dropped_count": 0,
+      "coverage_status": "COMPLETE_FOR_MAPPABLE_ROWS",
+      "transport": "api",
+      "retrieved_at": "2026-09-20T07:31:16.030Z"
+    },
+    "assembly": {
+      "raw_count": 2382,
+      "mappable_count": 2382,
+      "dropped_count": 0,
+      "coverage_status": "COMPLETE_FOR_MAPPABLE_ROWS",
+      "transport": "compact-proximity-endpoint",
+      "retrieved_at": "2026-09-20T07:31:27.118Z"
+    }
+  },
+  "checks": {
+    "total_rows": 4840,
+    "unique_ids": 4840,
+    "invalid_coordinates": 0,
+    "missing_names": 0,
+    "license_values": [
+      "CC BY 4.0"
+    ],
+    "service_types": [
+      "duty_pharmacy",
+      "pharmacy",
+      "hospital",
+      "market",
+      "assembly"
+    ],
+    "unique_id_pass": true,
+    "coordinate_pass": true,
+    "name_pass": true,
+    "license_pass": true
+  }
+}
