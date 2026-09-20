@@ -1,0 +1,16 @@
+{
+  "id": "senihbayankulu/izmir-public-services-eda-quality-checks",
+  "title": "Izmir Public Services: EDA & Quality Checks",
+  "code_file": "izmir-public-services-eda.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": false,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "senihbayankulu/izmir-public-services-open-data"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}
