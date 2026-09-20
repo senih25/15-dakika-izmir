@@ -44,6 +44,12 @@ function distanceLabel(km) {
   if (km == null) return "";
   return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(km < 10 ? 1 : 0)} km`;
 }
+
+function sourceTimeLabel(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleString("tr-TR");
+}
 function filteredItems() {
   const q = els.search.value.trim().toLocaleLowerCase("tr-TR");
   const limit = Number(els.limit.value);
@@ -98,6 +104,7 @@ function render() {
         <span class="result-meta">${esc([item.neighborhood, item.district].filter(Boolean).join(" · "))}</span>
         <span class="result-meta">${esc(item.address)}</span>
         ${item.detail ? `<span class="result-detail">${esc(item.detail)}</span>` : ""}
+        ${item.observedAt ? `<span class="result-detail">Kaynak zamanı: ${esc(sourceTimeLabel(item.observedAt))}</span>` : ""}
       </button>
       <div class="result-links">${tel}<a href="${osm}" target="_blank" rel="noopener">Haritada aç</a></div>`;
     li.querySelector("button").addEventListener("click", () => {
