@@ -25,6 +25,14 @@ npm test
 vercel dev
 ```
 
+## CI ve veri güncelliği sınırı
+
+GitHub Actions `g09-offline-ci.yml`, **Node 24 ile yalnız sentetik ve ağsız** `npm run check`, `node test/proximity.mjs` ve `node test/metadata-contract.mjs` testlerini çalıştırır. Gerçek konum, eczane/sağlık kayıtları, kullanıcı oturumu veya canlı İzBB API çağrısı yapılmaz.
+
+`kaggle/validation_report.json` dosyasındaki `generated_at` bir **geçmiş Kaggle veri anlık görüntüsünü** tarihlendirir. Bu tarih uygulamanın canlı API'den aldığı her kaydın güncel olduğunu kanıtlamaz. Test anlık görüntünün yaşını `RECENT / AGING / STALE` olarak sınıflandırır; iki günden eski kayıt için özellikle nöbetçi eczane güncelliği uyarısı verir. Güncel nöbet, hastane, pazar ve afet bilgileri için her zaman kaynak portal ve gerçek veri çekim tarihi ayrıca kontrol edilmelidir. Uygulama bağımsız bir kamu yararı prototipidir; İzBB adına resmî hizmet sunmaz.
+
+Atıf ve lisans metni `api/meta.js`, `kaggle/sources.csv` ve ilgili [İzBB Açık Veri Portalı](https://acikveri.bizizmir.com/) veri kümesi sayfalarına dayanır. Kaynak sayfasında güncel lisans koşulu değişirse bu README tek başına yeniden kullanım hakkı sağlamaz.
+
 ## Yayın kapısı
 PUBLIC-STABLE için freshness, license, schema/spatial QA, coverage, accessibility, correction/redress, reproducibility ve release-manifest kontrollerinin tamamı PASS olmalıdır.
 
