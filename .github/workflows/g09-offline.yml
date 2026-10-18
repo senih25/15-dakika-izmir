@@ -1,0 +1,28 @@
+name: Offline data contract and attribution CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: JavaScript syntax and route checks
+        run: npm run check
+      - name: Offline mock-only source and privacy contract tests
+        run: node test/offline-contracts.mjs
