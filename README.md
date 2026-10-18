@@ -19,11 +19,25 @@
 Tüm hizmet verileri İzmir Büyükşehir Belediyesi Açık Veri Portalı üzerinden sağlanır ve aksi belirtilmedikçe CC BY 4.0 lisanslıdır.
 
 ## Doğrulama
+
+**GitHub CI (ağ erişimi gerektirmeyen testler):**
+
 ```powershell
 npm run check
+node test/proximity.mjs
+node test/public-metadata.mjs
+```
+
+Bu testler İzBB API'sine, kullanıcı konumuna veya harici modele istek göndermez. `test/public-metadata.mjs` beş resmî veri kaynağının CC BY 4.0 atfını, `PUBLIC-BETA` sınırlarını ve **arşiv Kaggle snapshot'ının 45 günlük güncellik kapısını** kontrol eder. Snapshot doğrulaması, canlı nöbetçi eczane veya gerçek zamanlı kaynak güncelliğini kanıtlamaz.
+
+**Canlı kaynaklara erişen manuel smoke** (dış bağlantı gerektirir; CI'da otomatik çalışmaz):
+
+```powershell
 npm test
 vercel dev
 ```
+
+Kaynak erişilemezse bunu hizmetin bulunmadığı şeklinde yorumlama; `api/meta` kaynağını ve atıf bilgisini kullanıcıya göster.
 
 ## Yayın kapısı
 PUBLIC-STABLE için freshness, license, schema/spatial QA, coverage, accessibility, correction/redress, reproducibility ve release-manifest kontrollerinin tamamı PASS olmalıdır.
