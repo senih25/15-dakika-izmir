@@ -18,6 +18,8 @@
 
 Tüm hizmet verileri İzmir Büyükşehir Belediyesi Açık Veri Portalı üzerinden sağlanır ve aksi belirtilmedikçe CC BY 4.0 lisanslıdır.
 
+**Güncellik sınırı:** Kaggle veri derlemesi tarihli bir snapshot'tır; nöbetçi eczane bilgileri canlı günlük teyidin yerine geçmez. Kaynak atfı, tarih ve CI bakım kapısı için [Veri Güncelliği ve Atıf](docs/DATA_FRESHNESS_AND_ATTRIBUTION.md) belgesine bakın.
+
 ## Doğrulama
 ```powershell
 npm run check
