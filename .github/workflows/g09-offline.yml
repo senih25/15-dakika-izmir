@@ -28,3 +28,5 @@ jobs:
         run: node test/proximity.mjs
       - name: Official data metadata and historical freshness disclosure
         run: node test/source-contract.mjs
+      - name: Synthetic APIs, proximity privacy and upstream fail-closed behavior
+        run: node test/offline-contracts.mjs
