@@ -1,0 +1,33 @@
+name: 15 Dakika Izmir — deterministic QA
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Node 24 source, proximity and provenance checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CI: "true"
+    steps:
+      - name: Checkout (read-only)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Static source checks
+        run: npm run check
+      - name: Existing synthetic proximity and smoke tests
+        run: npm test
+      - name: Source attribution and freshness gate
+        run: node test/freshness.mjs
