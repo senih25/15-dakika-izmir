@@ -1,0 +1,30 @@
+name: Izmir offline provenance and privacy checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: JavaScript syntax check (no network)
+        run: npm run check
+      - name: Synthetic proximity/privacy tests (no network)
+        run: node test/proximity.mjs
+      - name: Attribution and archived-snapshot freshness
+        run: node test/metadata-contract.mjs
