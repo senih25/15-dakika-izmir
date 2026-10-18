@@ -1,0 +1,32 @@
+name: Izmir public data offline quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Static JavaScript syntax
+        run: npm run check
+      - name: Synthetic proximity and location privacy
+        run: node test/proximity.mjs
+      - name: Official data metadata and historical freshness disclosure
+        run: node test/source-contract.mjs
+      - name: Synthetic APIs, proximity privacy and upstream fail-closed behavior
+        run: node test/offline-contracts.mjs
