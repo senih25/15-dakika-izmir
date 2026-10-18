@@ -1,0 +1,36 @@
+name: Public-beta offline quality and provenance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: izmir-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CI: "true"
+    steps:
+      - name: Checkout (no persisted credentials)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Static JavaScript syntax checks
+        run: npm run check
+      - name: Offline synthetic proximity/privacy regression
+        run: node test/proximity.mjs
+      - name: Official-source attribution and archive freshness
+        run: node test/public-metadata.mjs
