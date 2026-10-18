@@ -1,0 +1,39 @@
+name: G09 public-beta offline quality gate
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/g09-offline-qa.yml"
+      - "api/**"
+      - "test/**"
+      - "kaggle/sources.csv"
+      - "kaggle/validation_report.json"
+      - "docs/DATA_FRESHNESS_POLICY.md"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-qa:
+    name: Node 24 / syntax / proximity / source provenance
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      CI: "true"
+      PUBLIC_STABLE: "0"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: JavaScript syntax checks
+        run: npm run check
+      - name: Synthetic coordinate privacy & distance tests
+        run: node test/proximity.mjs
+      - name: Official-source attribution and snapshot freshness (offline)
+        run: node test/metadata-provenance.mjs
