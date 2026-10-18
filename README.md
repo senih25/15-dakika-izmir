@@ -10,6 +10,12 @@
 - “Veri yok” hiçbir zaman “hizmet yok” olarak yorumlanmaz.
 - Mahalleleri tek composite skorla sıralama bu PUBLIC-BETA sürümünde kapalıdır.
 
+## Veri güncelliği ve kullanım sınırı
+
+Uygulama İzBB açık veri kaynaklarını kullanır, ancak İzBB'nin resmî uygulaması değildir. **Canlı API yanıtı, verinin güncel veya eksiksiz olduğunu garanti etmez.** Kaggle doğrulama raporu 20 Eylül 2026 tarihli **tarihsel bir anlık görüntüdür**; günlük değişen nöbetçi eczane bilgileri için güncel kaynak tarihi ayrıca doğrulanmalıdır. Veri sağlayıcılarının CC BY 4.0 koşulları uygulamanın MIT yazılım lisansından bağımsızdır.
+
+Ayrıntılı kaynak ve sürüm sınırları: [Veri güncelliği ve kaynak atfı politikası](docs/DATA_FRESHNESS_POLICY.md).
+
 ## Kaynaklar
 - Nöbetçi eczaneler / eczane listesi
 - Hastaneler
